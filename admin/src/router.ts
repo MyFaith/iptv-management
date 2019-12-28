@@ -18,6 +18,11 @@ export default new Router({
         {
             path: '/category/add',
             component: () => import('./views/category/edit.vue')
+        },
+        {
+            path: '/category/edit/:id',
+            component: () => import('./views/category/edit.vue'),
+            props: true
         }
     ]
 });
