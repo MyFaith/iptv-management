@@ -22,9 +22,12 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import { Mutation } from 'vuex-class';
 
 @Component
 export default class CategoryList extends Vue {
+    @Mutation setHeaderName: any;
+
     tableData = [
         { id: 1, name: 'category name1', parent: '' },
         { id: 2, name: 'category name2', parent: '' },
@@ -38,6 +41,10 @@ export default class CategoryList extends Vue {
 
     // 删除
     remove(row: any) {}
+
+    created() {
+        this.setHeaderName('分类管理');
+    }
 }
 </script>
 

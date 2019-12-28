@@ -19,17 +19,32 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Mutation } from 'vuex-class';
 
 @Component
 export default class CategoryEdit extends Vue {
+    @Mutation setHeaderName: any;
+
+    @Prop({})
+    id: string;
+
     form = {
         name: '',
         parent: ''
     };
 
+    // 保存
     save() {
         console.log('submit!');
+    }
+
+    created() {
+        if(this.id) {
+            this.setHeaderName('编辑分类');
+        } else {
+            this.setHeaderName('添加分类');
+        }
     }
 }
 </script>

@@ -12,7 +12,7 @@
             </el-menu>
         </el-aside>
         <el-container>
-            <el-header class="header">Header</el-header>
+            <el-header class="header">{{ headerName }}</el-header>
             <el-main class="content">
                 <slot></slot>
             </el-main>
@@ -23,9 +23,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 
 @Component
 export default class Layout extends Vue {
+    @State headerName: string;
+
     menuList = [
         {
             title: '分类管理',
