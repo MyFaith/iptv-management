@@ -6,9 +6,7 @@
             </el-form-item>
             <el-form-item label="上级分类">
                 <el-select v-model="form.parent" placeholder="请选择上级分类">
-                    <el-option label="分类1" :value="1"></el-option>
-                    <el-option label="分类2" :value="2"></el-option>
-                    <el-option label="分类3" :value="3"></el-option>
+                    <el-option v-for="(item,i) in categoryList" :key="i" :label="item.name" :value="item._id"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
@@ -29,26 +27,67 @@ export default {
         return {
             form: {
                 name: '',
-                parent: ''
-            }
+                parent: null
+            },
+            categoryList: []
         };
     },
     methods: {
         ...mapMutations(['setHeaderName']),
 
-        /**
-         * 保存
-         */
+        // 保存
         save() {
-            console.log('submit!');
+            if(this.id) {
+                // 更新
+                this.$http.put('/category/' + this.id, this.form).then(res => {
+                    if(res.data.nModified > 0) {
+                        this.$message.success(`修改成功`);
+                        this.$router.push('/category/list');
+                    } else {
+                        this.$message.error(`修改失败`);
+                    }
+                }).catch(err => {
+                    return this.$message.error(err);
+                });
+            } else {
+                // 添加
+                this.$http.post('/category', this.form).then(res => {
+                    if(res.data.length > 0) {
+                        this.$message.success(`保存成功`);
+                        this.$router.push('/category/list');
+                    } else {
+                        this.$message.error(`修改失败`);
+                    }
+                }).catch(err => {
+                    return this.$message.error(err);
+                });
+            }
+        },
+        // 获取数据
+        getData() {
+            this.$http.get('/category/' + this.id).then(res => {
+                this.form = res.data;
+            }).catch(err => {
+                return this.$message.error(err);
+            });
+        },
+        // 获取分类列表
+        getCategory() {
+            this.$http.get('/category').then(res => {
+                this.categoryList = res.data;
+            }).catch(err => {
+                return this.$message.error(err);
+            });
         }
     },
     created() {
         if (this.id) {
             this.setHeaderName('编辑分类');
+            this.getData();
         } else {
             this.setHeaderName('添加分类');
         }
+        this.getCategory();
     }
 };
 </script>

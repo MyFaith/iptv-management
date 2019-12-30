@@ -2,11 +2,11 @@
     <div class="category-list">
         <el-table :data="tableData" tooltip-effect="dark" stripe style="width: 80%;">
             <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="id" label="ID"></el-table-column>
+            <el-table-column prop="_id" label="ID"></el-table-column>
             <el-table-column prop="name" label="分类名称"></el-table-column>
             <el-table-column label="上级分类">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.parent">{{ scope.row.parent }}</span>
+                    <span v-if="scope.row.parent">{{ scope.row.parent.name }}({{ scope.row.parent._id }})</span>
                     <span v-else>-</span>
                 </template>
             </el-table-column>
@@ -26,34 +26,42 @@ import { mapMutations } from 'vuex';
 export default {
     data() {
         return {
-            tableData: [
-                { id: 1, name: 'category name1', parent: '' },
-                { id: 2, name: 'category name2', parent: '' },
-                { id: 3, name: 'category name3', parent: 1 }
-            ]
+            tableData: []
         };
     },
     methods: {
         ...mapMutations(['setHeaderName']),
-        /**
-         * 编辑
-         */
+        // 编辑
         edit(row) {
-            this.$router.push(`/category/edit/${row.id}`);
+            this.$router.push(`/category/edit/${row._id}`);
         },
-
-        /**
-         * 删除
-         */
-        remove(row) {},
-
-        /**
-         * 获取数据
-         */
-        getData() {}
+        // 删除
+        remove(row) {
+            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                return this.$http.delete('/category/' + row._id);
+            }).then(res => {
+                this.$message.success(`已删除 ${res.data.deletedCount} 条数据.`);
+                this.getData();
+            }).catch(err => {
+                return this.$message.error(err);
+            });
+        },
+        // 获取数据
+        getData() {
+            this.$http.get('/category').then(res => {
+                this.tableData = res.data;
+            }).catch(err => {
+                return this.$message.error(err);
+            });
+        }
     },
     created() {
         this.setHeaderName('分类管理');
+        this.getData();
     }
 };
 </script>
