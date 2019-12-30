@@ -23,6 +23,19 @@ export default new Router({
             path: '/category/edit/:id',
             component: () => import('./views/category/edit.vue'),
             props: true
+        },
+        {
+            path: '/source/list',
+            component: () => import('./views/source/list.vue')
+        },
+        {
+            path: '/source/add',
+            component: () => import('./views/source/edit.vue')
+        },
+        {
+            path: '/source/edit/:id',
+            component: () => import('./views/source/edit.vue'),
+            props: true
         }
     ]
 });

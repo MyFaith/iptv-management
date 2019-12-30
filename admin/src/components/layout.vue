@@ -38,6 +38,16 @@ export default {
                         { title: '添加分类', path: '/category/add' },
                         { title: '分类列表', path: '/category/list' }
                     ]
+                },
+                {
+                    title: '直播源管理',
+                    icon: 'el-icon-mic',
+                    items: [
+                        { title: '添加直播源', path: '/source/add' },
+                        { title: '直播源列表', path: '/source/list' },
+                        { title: '直播源列表订阅', path: '/source/subscribe' },
+                        { title: '直播源手动抓取', path: '/source/crawl' }
+                    ]
                 }
             ]
         };
