@@ -18,35 +18,39 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
-import { Mutation } from 'vuex-class';
+<script>
+import { mapMutations } from 'vuex';
 
-@Component
-export default class CategoryEdit extends Vue {
-    @Mutation setHeaderName: any;
+export default {
+    props: {
+        id: String
+    },
+    data() {
+        return {
+            form: {
+                name: '',
+                parent: ''
+            }
+        };
+    },
+    methods: {
+        ...mapMutations(['setHeaderName']),
 
-    @Prop({})
-    id: string;
-
-    form = {
-        name: '',
-        parent: ''
-    };
-
-    // 保存
-    save() {
-        console.log('submit!');
-    }
-
+        /**
+         * 保存
+         */
+        save() {
+            console.log('submit!');
+        }
+    },
     created() {
-        if(this.id) {
+        if (this.id) {
             this.setHeaderName('编辑分类');
         } else {
             this.setHeaderName('添加分类');
         }
     }
-}
+};
 </script>
 
-<style></style>
+<style lang="scss" scoped></style>

@@ -21,25 +21,26 @@
     </el-container>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+<script>
+import { mapState } from 'vuex';
 
-@Component
-export default class Layout extends Vue {
-    @State headerName: string;
-
-    menuList = [
-        {
-            title: '分类管理',
-            icon: 'el-icon-tickets',
-            items: [
-                { title: '添加分类', path: '/category/add' },
-                { title: '分类列表', path: '/category/list' }
+export default {
+    computed: {
+        ...mapState(['headerName'])
+    },
+    data() {
+        return {
+            menuList: [
+                {
+                    title: '分类管理',
+                    icon: 'el-icon-tickets',
+                    items: [
+                        { title: '添加分类', path: '/category/add' },
+                        { title: '分类列表', path: '/category/list' }
+                    ]
+                }
             ]
-        }
-    ];
-}
+        };
+    }
+};
 </script>
-
-<style></style>

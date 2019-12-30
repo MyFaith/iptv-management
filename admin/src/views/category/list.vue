@@ -20,32 +20,42 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { Mutation } from 'vuex-class';
+<script>
+import { mapMutations } from 'vuex';
 
-@Component
-export default class CategoryList extends Vue {
-    @Mutation setHeaderName: any;
+export default {
+    data() {
+        return {
+            tableData: [
+                { id: 1, name: 'category name1', parent: '' },
+                { id: 2, name: 'category name2', parent: '' },
+                { id: 3, name: 'category name3', parent: 1 }
+            ]
+        };
+    },
+    methods: {
+        ...mapMutations(['setHeaderName']),
+        /**
+         * 编辑
+         */
+        edit(row) {
+            this.$router.push(`/category/edit/${row.id}`);
+        },
 
-    tableData = [
-        { id: 1, name: 'category name1', parent: '' },
-        { id: 2, name: 'category name2', parent: '' },
-        { id: 3, name: 'category name3', parent: 1 }
-    ];
+        /**
+         * 删除
+         */
+        remove(row) {},
 
-    // 编辑
-    edit(row: any) {
-        this.$router.push(`/category/edit/${row.id}`);
-    }
-
-    // 删除
-    remove(row: any) {}
-
+        /**
+         * 获取数据
+         */
+        getData() {}
+    },
     created() {
         this.setHeaderName('分类管理');
     }
-}
+};
 </script>
 
-<style></style>
+<style lang="scss" scoped></style>

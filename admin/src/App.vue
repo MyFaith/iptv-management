@@ -1,19 +1,16 @@
 <template>
     <div id="app">
         <layout>
-            <router-view />
+            <router-view></router-view>
         </layout>
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import Layout from './components/layout.vue';
-
-@Component({
+<script>
+import Layout from './components/layout';
+export default {
     components: { Layout }
-})
-export default class App extends Vue {}
+};
 </script>
 
 <style lang="scss">
