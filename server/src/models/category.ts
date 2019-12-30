@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
-interface ICategory extends mongoose.Document {
+export interface ICategory extends mongoose.Document {
+    _id: mongoose.Types.ObjectId,
     name: string,
     parent?: string,
     created: Date,
@@ -8,13 +9,14 @@ interface ICategory extends mongoose.Document {
 }
 
 const CategorySchema: mongoose.Schema = new mongoose.Schema({
+    _id: mongoose.Types.ObjectId,
     name: String,
     parent: String,
     created: Date,
     updated: Date
 });
 
-CategorySchema.pre('save', function(next) {
+CategorySchema.pre<ICategory>('save', function(next) {
     const now = new Date();
     if (!this.created) {
         this.created = now;
@@ -22,7 +24,7 @@ CategorySchema.pre('save', function(next) {
     next();
 });
 
-CategorySchema.pre('update', function(next) {
+CategorySchema.pre<ICategory>('update', function(next) {
     const now = new Date();
     if (!this.updated) {
         this.updated = now;
