@@ -1,5 +1,8 @@
 <template>
     <div class="category-list">
+        <div class="controls">
+            <el-button type="primary" size="small" icon="el-icon-plus" @click="$router.push('/category/add')"></el-button>
+        </div>
         <el-table :data="tableData" tooltip-effect="dark" stripe style="width: 100%;">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="_id" label="ID"></el-table-column>

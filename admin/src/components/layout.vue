@@ -35,7 +35,6 @@ export default {
                     title: '分类管理',
                     icon: 'el-icon-tickets',
                     items: [
-                        { title: '添加分类', path: '/category/add' },
                         { title: '分类列表', path: '/category/list' }
                     ]
                 },
@@ -43,10 +42,9 @@ export default {
                     title: '直播源管理',
                     icon: 'el-icon-mic',
                     items: [
-                        { title: '添加直播源', path: '/source/add' },
                         { title: '直播源列表', path: '/source/list' },
-                        { title: '直播源列表订阅', path: '/subscribe/list' },
-                        { title: '直播源手动抓取', path: '/source/crawl' }
+                        { title: '直播源订阅', path: '/subscribe/list' },
+                        { title: '直播源手动抓取', path: '/crawl/list' }
                     ]
                 }
             ]
