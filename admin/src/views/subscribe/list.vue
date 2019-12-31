@@ -16,7 +16,7 @@
             <el-table-column prop="url" label="订阅地址"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button size="small" type="warning" icon="el-icon-refresh" @click="refresh(scope.row)"></el-button>
+                    <el-button size="small" type="warning" icon="el-icon-refresh" @click="refresh(scope.row)" :loading="refreshLoading"></el-button>
                     <el-button size="small" type="primary" icon="el-icon-edit" @click="edit(scope.row)"></el-button>
                     <el-button size="small" type="danger" icon="el-icon-delete" @click="remove(scope.row)"></el-button>
                 </template>
@@ -35,6 +35,7 @@ export default {
             tableData: [],
             page: 1,
             total: 0,
+            refreshLoading: false
         };
     },
     methods: {
@@ -63,9 +64,13 @@ export default {
         },
         // 刷新订阅
         refresh(row) {
-            this.$http.post('/subscribe/' + row._id).then(() => {
-                this.$message.successs('更新订阅成功');
+            this.refreshLoading = true;
+            this.$http.post('/subscribe/refresh/' + row._id).then(res => {
+                debugger
+                this.refreshLoading = false;
+                this.$message.success('更新订阅成功');
             }).catch(err => {
+                this.refreshLoading = false;
                 return this.$message.error(err);
             });
         },
