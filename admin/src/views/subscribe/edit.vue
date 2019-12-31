@@ -1,6 +1,6 @@
 <template>
-    <el-dialog :title="title" :visible.sync="show" width="30%" :before-close="handleClose">
-        <el-form :model="form" label-width="80px">
+    <div class="subscribe-edit">
+        <el-form :model="form" label-width="80px" style="width: 30%;">
             <el-form-item label="名称">
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
@@ -12,22 +12,22 @@
             <el-form-item label="URL">
                 <el-input v-model="form.url"></el-input>
             </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="save">保存</el-button>
+            </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="save">保存</el-button>
-        </span>
-    </el-dialog>
+    </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
     props: {
-        id: String,
-        show: Boolean
+        id: String
     },
     data() {
         return {
-            isShow: true,
             title: '',
             form: {
                 name: '',
@@ -38,6 +38,8 @@ export default {
         };
     },
     methods: {
+        ...mapMutations(['setHeaderName']),
+
         // 保存
         save() {
             if(this.id) {
@@ -45,7 +47,7 @@ export default {
                 this.$http.put('/subscribe/' + this.id, this.form).then(res => {
                     if(res.data.nModified > 0) {
                         this.$message.success(`修改成功`);
-                        this.handleClose();
+                        this.$router.push('/subscribe/list');
                     } else {
                         this.$message.error(`修改失败`);
                     }
@@ -57,7 +59,7 @@ export default {
                 this.$http.post('/subscribe', this.form).then(res => {
                     if(res.data.length > 0) {
                         this.$message.success(`保存成功`);
-                        this.handleClose();
+                        this.$router.push('/subscribe/list');
                     } else {
                         this.$message.error(`修改失败`);
                     }
@@ -77,21 +79,18 @@ export default {
         // 获取分类列表
         getCategory() {
             this.$http.get('/category').then(res => {
-                this.categoryList = res.data;
+                this.categoryList = res.data.list;
             }).catch(err => {
                 return this.$message.error(err);
             });
-        },
-        handleClose() {
-            this.$emit('close');
         }
     },
     created() {
         if (this.id) {
-            this.title = '编辑订阅';
+            this.setHeaderName('编辑订阅');
             this.getData();
         } else {
-            this.title = '添加订阅';
+            this.setHeaderName('添加订阅');
         }
         this.getCategory();
     }

@@ -54,8 +54,6 @@ export default {
             }).then(res => {
                 this.$message.success(`已删除 ${res.data.deletedCount} 条数据.`);
                 this.getData();
-            }).catch(err => {
-                return this.$message.error(err);
             });
         },
         // 获取数据
@@ -66,8 +64,8 @@ export default {
                     size: 10
                 }
             }).then(res => {
-                this.tableData = res.data.data.list;
-                this.total = res.data.data.total;
+                this.tableData = res.data.list;
+                this.total = res.data.total;
             }).catch(err => {
                 return this.$message.error(err);
             });

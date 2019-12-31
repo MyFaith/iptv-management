@@ -82,7 +82,7 @@ export default {
         // 获取分类列表
         getCategory() {
             this.$http.get('/category').then(res => {
-                this.categoryList = res.data;
+                this.categoryList = res.data.list;
             }).catch(err => {
                 return this.$message.error(err);
             });

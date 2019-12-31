@@ -43,11 +43,11 @@ export default new Router({
         },
         {
             path: '/subscribe/add',
-            component: () => import('./views/source/edit.vue')
+            component: () => import('./views/subscribe/edit.vue')
         },
         {
             path: '/subscribe/edit/:id',
-            component: () => import('./views/source/edit.vue'),
+            component: () => import('./views/subscribe/edit.vue'),
             props: true
         }
     ]

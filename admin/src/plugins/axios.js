@@ -1,6 +1,17 @@
 import Vue from 'vue';
 import axios from 'axios';
 
-Vue.prototype.$http = axios.create({
+const http = axios.create({
     baseURL: 'http://localhost:8004'
 });
+
+http.interceptors.response.use((response) => {
+    if (!response.data.err) {
+        return response.data;
+    }
+    return Promise.reject(response.data.msg || "未知错误");
+},(error) => {
+    return Promise.reject(error);
+});
+    
+Vue.prototype.$http = http;

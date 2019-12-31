@@ -11,7 +11,8 @@
             </el-table-column>
             <el-table-column label="所属分类">
                 <template slot-scope="scope">
-                    <router-link tag="el-link" type="primary" :to="`/category/edit/${scope.row.category._id}`">{{ scope.row.category.name }}</router-link>
+                    <router-link v-if="scope.row.category" tag="el-link" type="primary" :to="`/category/edit/${scope.row.category._id}`">{{ scope.row.category.name }}</router-link>
+                    <span v-else>-</span>
                 </template>
             </el-table-column>
             <el-table-column prop="url" label="URL"></el-table-column>
@@ -59,8 +60,6 @@ export default {
             }).then(res => {
                 this.$message.success(`已删除 ${res.data.deletedCount} 条数据.`);
                 this.getData();
-            }).catch(err => {
-                return this.$message.error(err);
             });
         },
         // 获取数据
@@ -71,8 +70,8 @@ export default {
                     size: 10
                 }
             }).then(res => {
-                this.tableData = res.data.data.list;
-                this.total = res.data.data.total;
+                this.tableData = res.data.list;
+                this.total = res.data.total;
             }).catch(err => {
                 return this.$message.error(err);
             });
