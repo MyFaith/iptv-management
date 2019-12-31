@@ -21,17 +21,4 @@ body {
 * {
     box-sizing: border-box;
 }
-.container {
-    .left-side {
-        .menu {
-            height: 100vh;
-        }
-    }
-    .header,
-    .footer {
-        display: flex;
-        align-items: center;
-        font-weight: bold;
-    }
-}
 </style>
