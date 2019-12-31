@@ -36,6 +36,19 @@ export default new Router({
             path: '/source/edit/:id',
             component: () => import('./views/source/edit.vue'),
             props: true
+        },
+        {
+            path: '/subscribe/list',
+            component: () => import('./views/subscribe/list.vue')
+        },
+        {
+            path: '/subscribe/add',
+            component: () => import('./views/source/edit.vue')
+        },
+        {
+            path: '/subscribe/edit/:id',
+            component: () => import('./views/source/edit.vue'),
+            props: true
         }
     ]
 });

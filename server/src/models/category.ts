@@ -7,7 +7,7 @@ export interface ICategory extends mongoose.Document {
 
 const CategorySchema: mongoose.Schema = new mongoose.Schema({
     name: String,
-    parent: { type: mongoose.SchemaTypes.ObjectId, ref: 'category' },
+    parent: { type: mongoose.SchemaTypes.ObjectId, ref: 'category' }
 });
 
 CategorySchema.virtual('children', {

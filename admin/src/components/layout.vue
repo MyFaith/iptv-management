@@ -45,7 +45,7 @@ export default {
                     items: [
                         { title: '添加直播源', path: '/source/add' },
                         { title: '直播源列表', path: '/source/list' },
-                        { title: '直播源列表订阅', path: '/source/subscribe' },
+                        { title: '直播源列表订阅', path: '/subscribe/list' },
                         { title: '直播源手动抓取', path: '/source/crawl' }
                     ]
                 }

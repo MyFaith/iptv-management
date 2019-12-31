@@ -1,22 +1,22 @@
 import mongoose from 'mongoose';
 
-export interface ISource extends mongoose.Document {
+export interface ISubscribe extends mongoose.Document {
     name: string;
     category?: string;
     url: string;
 }
 
-const SourceSchema: mongoose.Schema = new mongoose.Schema({
+const SubscribeSchema: mongoose.Schema = new mongoose.Schema({
     name: String,
     category: { type: mongoose.SchemaTypes.ObjectId, ref: 'category' },
     url: String
 });
 
-SourceSchema.virtual('parent', {
+SubscribeSchema.virtual('parent', {
     localField: '_id',
     foreignField: 'category',
     justOne: false,
     ref: 'category'
 });
 
-export const Source: mongoose.Model<ISource> = mongoose.model<ISource>('source', SourceSchema, 'source');
+export const Subscribe: mongoose.Model<ISubscribe> = mongoose.model<ISubscribe>('subscribe', SubscribeSchema, 'subscribe');

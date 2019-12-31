@@ -1,6 +1,6 @@
 <template>
-    <div class="source-edit">
-        <el-form :model="form" label-width="80px" style="width: 30%;">
+    <el-dialog :title="title" :visible.sync="show" width="30%" :before-close="handleClose">
+        <el-form :model="form" label-width="80px">
             <el-form-item label="名称">
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
@@ -12,22 +12,23 @@
             <el-form-item label="URL">
                 <el-input v-model="form.url"></el-input>
             </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="save">保存</el-button>
-            </el-form-item>
         </el-form>
-    </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="save">保存</el-button>
+        </span>
+    </el-dialog>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-
 export default {
     props: {
-        id: String
+        id: String,
+        show: Boolean
     },
     data() {
         return {
+            isShow: true,
+            title: '',
             form: {
                 name: '',
                 category: null,
@@ -37,16 +38,14 @@ export default {
         };
     },
     methods: {
-        ...mapMutations(['setHeaderName']),
-
         // 保存
         save() {
             if(this.id) {
                 // 更新
-                this.$http.put('/source/' + this.id, this.form).then(res => {
+                this.$http.put('/subscribe/' + this.id, this.form).then(res => {
                     if(res.data.nModified > 0) {
                         this.$message.success(`修改成功`);
-                        this.$router.push('/source/list');
+                        this.handleClose();
                     } else {
                         this.$message.error(`修改失败`);
                     }
@@ -55,10 +54,10 @@ export default {
                 });
             } else {
                 // 添加
-                this.$http.post('/source', this.form).then(res => {
+                this.$http.post('/subscribe', this.form).then(res => {
                     if(res.data.length > 0) {
                         this.$message.success(`保存成功`);
-                        this.$router.push('/source/list');
+                        this.handleClose();
                     } else {
                         this.$message.error(`修改失败`);
                     }
@@ -69,7 +68,7 @@ export default {
         },
         // 获取数据
         getData() {
-            this.$http.get('/source/' + this.id).then(res => {
+            this.$http.get('/subscribe/' + this.id).then(res => {
                 this.form = res.data;
             }).catch(err => {
                 return this.$message.error(err);
@@ -82,14 +81,17 @@ export default {
             }).catch(err => {
                 return this.$message.error(err);
             });
+        },
+        handleClose() {
+            this.$emit('close');
         }
     },
     created() {
         if (this.id) {
-            this.setHeaderName('编辑直播源');
+            this.title = '编辑订阅';
             this.getData();
         } else {
-            this.setHeaderName('添加直播源');
+            this.title = '添加订阅';
         }
         this.getCategory();
     }
