@@ -65,8 +65,7 @@ export default {
         // 刷新订阅
         refresh(row) {
             this.refreshLoading = true;
-            this.$http.post('/subscribe/refresh/' + row._id).then(res => {
-                debugger
+            this.$http.post('/subscribe/refresh/' + row._id).then(() => {
                 this.refreshLoading = false;
                 this.$message.success('更新订阅成功');
             }).catch(err => {
