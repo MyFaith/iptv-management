@@ -18,13 +18,15 @@ router.post('/subscribe/refresh/:id', async ctx => {
     const res = await Axios.get(source.url);
     // 解析数据
     const playlist = PlaylistParser.parse(res.data);
+    // TODO: 根据地址或名称匹配, 如果存在, 更新
     // 保存到数据库
     const dataList = [];
     playlist.items.map(item => {
         dataList.push({
             name: item.name,
             category: source.category._id.toString(),
-            url: item.url
+            url: item.url,
+            logo: item.tvg.logo
         });
     });
     const sourceModel = Mongoose.model('source');
@@ -38,9 +40,9 @@ router.post('/subscribe/refresh/:id', async ctx => {
  * 获取列表
  */
 router.get('/:resource', async ctx => {
-    const resource = ctx.params.resource;
+    const resource = ctx. params.resource;
     const page = ctx.query.page || 1;
-    const size = ctx.query.page || 10;
+    const size = ctx.query.size || 10;
 
     const model = Mongoose.model(resource);
     const options = { populate: '' };
@@ -49,8 +51,12 @@ router.get('/:resource', async ctx => {
     } else if (resource === 'source' || resource === 'subscribe') {
         options.populate = 'category';
     }
-    const result = await model.find().setOptions(options).skip((page - 1) * size).limit(size);
-    ctx.body = result;
+    const total = await await model.find().setOptions(options).count();
+    const result = await model.find().setOptions(options).skip((Number(page) - 1) * Number(size)).limit(Number(size));
+    ctx.body = Response.success('成功', {
+        total,
+        list: result
+    });
 });
 
 /**

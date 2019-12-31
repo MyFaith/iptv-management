@@ -6,10 +6,11 @@ exports.error = function(code, msg) {
     };
 };
 
-exports.success = function(msg) {
+exports.success = function(msg, data) {
     return {
         err: false,
         code: 200,
-        msg
+        msg,
+        data
     };
 };

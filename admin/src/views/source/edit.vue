@@ -12,6 +12,9 @@
             <el-form-item label="URL">
                 <el-input v-model="form.url"></el-input>
             </el-form-item>
+            <el-form-item label="LOGO">
+                <el-input v-model="form.logo"></el-input>
+            </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="save">保存</el-button>
             </el-form-item>
@@ -31,7 +34,8 @@ export default {
             form: {
                 name: '',
                 category: null,
-                url: ''
+                url: '',
+                logo: ''
             },
             categoryList: []
         };

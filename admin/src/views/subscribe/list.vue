@@ -3,7 +3,7 @@
         <div class="controls">
             <el-button type="primary" size="small" icon="el-icon-plus" @click="isShowEdit = true"></el-button>
         </div>
-        <el-table :data="tableData" tooltip-effect="dark" stripe style="width: 80%;">
+        <el-table :data="tableData" tooltip-effect="dark" stripe style="width: 100%;">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="_id" label="ID"></el-table-column>
             <el-table-column prop="name" label="名称"></el-table-column>
@@ -21,6 +21,7 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination class="page" background layout="prev, pager, next" :current-page="page" :total="total" @current-change="changePage"></el-pagination>
         <edit :show="isShowEdit" @close="isShowEdit = false;getData()"></edit>
     </div>
 </template>
@@ -34,11 +35,18 @@ export default {
     data() {
         return {
             tableData: [],
+            page: 1,
+            total: 0,
             isShowEdit: false
         };
     },
     methods: {
         ...mapMutations(['setHeaderName']),
+        // 翻页
+        changePage(page) {
+            this.page = page;
+            this.getData();
+        },
         // 编辑
         edit(row) {
             this.$router.push(`/source/edit/${row._id}`);
@@ -68,8 +76,14 @@ export default {
         // },
         // 获取数据
         getData() {
-            this.$http.get('/subscribe').then(res => {
-                this.tableData = res.data;
+            this.$http.get('/subscribe', {
+                params: {
+                    page: this.page,
+                    size: 10
+                }
+            }).then(res => {
+                this.tableData = res.data.data.list;
+                this.total = res.data.data.total;
             }).catch(err => {
                 return this.$message.error(err);
             });
@@ -82,4 +96,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.page {
+    margin: 10px 0;
+}
+</style>

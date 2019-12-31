@@ -3,7 +3,8 @@ const Mongoose = require('mongoose');
 const SourceSchema = new Mongoose.Schema({
     name: String,
     category: { type: Mongoose.SchemaTypes.ObjectId, ref: 'category' },
-    url: String
+    url: String,
+    logo: String
 });
 
 SourceSchema.virtual('parent', {
