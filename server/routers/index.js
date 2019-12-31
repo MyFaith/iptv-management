@@ -1,13 +1,46 @@
-import Router from 'koa-router';
-import Mongoose from 'mongoose';
+const Router = require('koa-router');
+const Mongoose = require('mongoose');
+const Axios = require('axios');
+const PlaylistParser = require('iptv-playlist-parser');
+const Response = require('../util/response');
 
 const router = new Router();
 
+/* 自定义路由START */
+router.post('/subscribe/refresh/:id', async ctx => {
+    const id = ctx.params.id;
+    const subscribeModel = Mongoose.model('subscribe');
+    const source = await subscribeModel.findById(id);
+    if (!source) {
+        ctx.body = Response.error(404, '该ID不存在');
+    }
+    // 获取列表数据
+    const res = await Axios.get(source.url);
+    // 解析数据
+    const playlist = PlaylistParser.parse(res.data);
+    // 保存到数据库
+    const dataList = [];
+    playlist.items.map(item => {
+        dataList.push({
+            name: item.name,
+            category: source.category._id.toString(),
+            url: item.url
+        });
+    });
+    const sourceModel = Mongoose.model('source');
+    const result = await sourceModel.insertMany(dataList);
+    ctx.body = result;
+});
+/* 自定义路由END */
+
+/* 通用路由START */
 /**
  * 获取列表
  */
 router.get('/:resource', async ctx => {
     const resource = ctx.params.resource;
+    const page = ctx.query.page || 1;
+    const size = ctx.query.page || 10;
 
     const model = Mongoose.model(resource);
     const options = { populate: '' };
@@ -16,7 +49,7 @@ router.get('/:resource', async ctx => {
     } else if (resource === 'source' || resource === 'subscribe') {
         options.populate = 'category';
     }
-    const result = await model.find().setOptions(options);
+    const result = await model.find().setOptions(options).skip((page - 1) * size).limit(size);
     ctx.body = result;
 });
 
@@ -66,5 +99,6 @@ router.delete('/:resource/:id', async ctx => {
     const result = await model.deleteOne({ _id: id });
     ctx.body = result;
 });
+/* 通用路由END */
 
-export default router;
+module.exports = router;
