@@ -4,7 +4,8 @@ const SourceSchema = new Mongoose.Schema({
     name: String,
     category: { type: Mongoose.SchemaTypes.ObjectId, ref: 'category' },
     url: String,
-    logo: String
+    logo: String,
+    type: Number
 });
 
 SourceSchema.virtual('parent', {

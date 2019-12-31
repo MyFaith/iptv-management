@@ -19,7 +19,6 @@ router.post('/subscribe/refresh/:id', async ctx => {
         const res = await Axios.get(source.url);
         // 解析数据
         const playlist = PlaylistParser.parse(res.data);
-        // TODO: 根据地址或名称匹配, 如果存在, 更新
         // 保存到数据库
         const dataList = [];
         playlist.items.map(item => {
@@ -27,10 +26,12 @@ router.post('/subscribe/refresh/:id', async ctx => {
                 name: item.name,
                 category: source.category._id.toString(),
                 url: item.url,
-                logo: item.tvg.logo
+                logo: item.tvg.logo,
+                type: 2
             });
         });
         const sourceModel = Mongoose.model('source');
+        await sourceModel.deleteMany({ type: 2 });
         const result = await sourceModel.insertMany(dataList);
         ctx.body = Response.success('成功', result);
     } catch (err) {
