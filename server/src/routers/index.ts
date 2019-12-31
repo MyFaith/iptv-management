@@ -13,6 +13,8 @@ router.get('/:resource', async ctx => {
     const options = { populate: '' };
     if (resource === 'category') {
         options.populate = 'parent';
+    } else if (resource === 'source') {
+        options.populate = 'category';
     }
     const result = await model.find().setOptions(options);
     ctx.body = result;

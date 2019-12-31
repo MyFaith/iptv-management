@@ -4,7 +4,11 @@
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="_id" label="ID"></el-table-column>
             <el-table-column prop="name" label="名称"></el-table-column>
-            <el-table-column prop="category" label="所属分类"></el-table-column>
+            <el-table-column label="所属分类">
+                <template slot-scope="scope">
+                    <router-link tag="el-link" type="primary" :to="`/category/edit/${scope.row.category._id}`">{{ scope.row.category.name }}</router-link>
+                </template>
+            </el-table-column>
             <el-table-column prop="url" label="URL"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
@@ -22,9 +26,7 @@ import { mapMutations } from 'vuex';
 export default {
     data() {
         return {
-            tableData: [
-                { _id: 1, name: 'cctv1', category: '央视', url: 'http://xxxxxx.m3u8' }
-            ]
+            tableData: []
         };
     },
     methods: {
@@ -40,13 +42,21 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-
+                return this.$http.delete('/source/' + row._id);
+            }).then(res => {
+                this.$message.success(`已删除 ${res.data.deletedCount} 条数据.`);
+                this.getData();
             }).catch(err => {
                 return this.$message.error(err);
             });
         },
         // 获取数据
         getData() {
+            this.$http.get('/source').then(res => {
+                this.tableData = res.data;
+            }).catch(err => {
+                return this.$message.error(err);
+            });
         }
     },
     created() {

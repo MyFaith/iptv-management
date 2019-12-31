@@ -30,7 +30,8 @@ export default {
         return {
             form: {
                 name: '',
-                parent: null
+                category: null,
+                url: ''
             },
             categoryList: []
         };
@@ -42,32 +43,38 @@ export default {
         save() {
             if(this.id) {
                 // 更新
-                /* this.$http.put('/category/' + this.id, this.form).then(res => {
+                this.$http.put('/source/' + this.id, this.form).then(res => {
                     if(res.data.nModified > 0) {
                         this.$message.success(`修改成功`);
-                        this.$router.push('/category/list');
+                        this.$router.push('/source/list');
                     } else {
                         this.$message.error(`修改失败`);
                     }
                 }).catch(err => {
                     return this.$message.error(err);
-                }); */
+                });
             } else {
                 // 添加
-                /* this.$http.post('/category', this.form).then(res => {
+                this.$http.post('/source', this.form).then(res => {
                     if(res.data.length > 0) {
                         this.$message.success(`保存成功`);
-                        this.$router.push('/category/list');
+                        this.$router.push('/source/list');
                     } else {
                         this.$message.error(`修改失败`);
                     }
                 }).catch(err => {
                     return this.$message.error(err);
-                }); */
+                });
             }
         },
         // 获取数据
-        getData() {},
+        getData() {
+            this.$http.get('/source/' + this.id).then(res => {
+                this.form = res.data;
+            }).catch(err => {
+                return this.$message.error(err);
+            });
+        },
         // 获取分类列表
         getCategory() {
             this.$http.get('/category').then(res => {
