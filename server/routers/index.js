@@ -49,6 +49,19 @@ router.get('/:resource', async ctx => {
         const resource = ctx. params.resource;
         const page = ctx.query.page || 1;
         const size = ctx.query.size || 10;
+
+        // mongodb查询条件
+        let query = { $and: [] };
+        Object.keys(ctx.query).map(key => {
+            if (key !== 'page' && key !== 'size') {
+                const value = ctx.query[key];
+                const obj = {};
+                obj[key] = {
+                    $regex: new RegExp(value, 'i')
+                };
+                query.$and.push(obj);
+            }
+        });
     
         const model = Mongoose.model(resource);
         const options = { populate: '' };
@@ -57,8 +70,10 @@ router.get('/:resource', async ctx => {
         } else if (resource === 'source' || resource === 'subscribe') {
             options.populate = 'category';
         }
-        const total = await await model.find().setOptions(options).count();
-        const result = await model.find().setOptions(options).skip((Number(page) - 1) * Number(size)).limit(Number(size));
+        // 如果没有条件, 清空条件对象
+        if (query.$and.length === 0) query = {};
+        const total = await await model.find(query).setOptions(options).count();
+        const result = await model.find(query).setOptions(options).skip((Number(page) - 1) * Number(size)).limit(Number(size));
         ctx.body = Response.success('成功', {
             total,
             list: result

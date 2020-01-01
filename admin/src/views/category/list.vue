@@ -1,7 +1,13 @@
 <template>
     <div class="category-list">
-        <div class="controls">
-            <el-button type="primary" size="small" icon="el-icon-plus" @click="$router.push('/category/add')"></el-button>
+        <div class="filters">
+            <div class="inputs">
+                <el-input class="name" v-model="filters.name" placeholder="根据名称搜索"></el-input>
+            </div>
+            <div class="control-btns">
+                <el-button class="add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/category/add')"></el-button>
+                <el-button class="search" type="primary" size="small" icon="el-icon-search" @click="getData"></el-button>
+            </div>
         </div>
         <el-table :data="tableData" tooltip-effect="dark" stripe style="width: 100%;">
             <el-table-column type="selection" width="55"></el-table-column>
@@ -31,6 +37,9 @@ export default {
     data() {
         return {
             tableData: [],
+            filters: {
+                name: ''
+            },
             page: 1,
             total: 0
         };
@@ -64,7 +73,8 @@ export default {
             this.$http.get('/category', {
                 params: {
                     page: this.page,
-                    size: 10
+                    size: 10,
+                    ...this.filters
                 }
             }).then(res => {
                 this.tableData = res.data.list;
@@ -82,6 +92,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.filters {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    * {
+        margin: 0 10px;
+    }
+    .inputs {
+        .name {
+            width: 200px;
+        }
+    }
+}
 .page {
     margin: 10px 0;
 }
