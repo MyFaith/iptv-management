@@ -7,6 +7,9 @@ const Response = require('../util/response');
 const router = new Router();
 
 /* 自定义路由START */
+/**
+ * 更新订阅源
+ */
 router.post('/subscribe/refresh/:id', async ctx => {
     try {
         const id = ctx.params.id;
@@ -27,7 +30,7 @@ router.post('/subscribe/refresh/:id', async ctx => {
                 category: source.category._id.toString(),
                 url: item.url,
                 logo: item.tvg.logo,
-                type: 2
+                type: 2 // 订阅源
             });
         });
         const sourceModel = Mongoose.model('source');
