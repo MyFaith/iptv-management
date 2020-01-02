@@ -7,6 +7,7 @@
             </div>
             <div class="control-btns">
                 <el-button class="add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/crawl/add')"></el-button>
+                <el-button class="crawl" type="warning" size="small" icon="el-icon-refresh" @click="crawlSourceAll" :loading="crawlLoading"></el-button>
                 <el-button class="search" type="primary" size="small" icon="el-icon-search" @click="getData"></el-button>
             </div>
         </div>
@@ -30,7 +31,7 @@
             <el-table-column prop="url" label="直播间地址"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button size="small" type="warning" icon="el-icon-refresh" @click="refresh(scope.row)" :loading="refreshLoading"></el-button>
+                    <el-button size="small" type="warning" icon="el-icon-refresh" @click="crawlSource(scope.row)" :loading="crawlLoading"></el-button>
                     <el-button size="small" type="primary" icon="el-icon-edit" @click="edit(scope.row)"></el-button>
                     <el-button size="small" type="danger" icon="el-icon-delete" @click="remove(scope.row)"></el-button>
                 </template>
@@ -53,7 +54,7 @@ export default {
             },
             page: 1,
             total: 0,
-            refreshLoading: false
+            crawlLoading: false
         };
     },
     methods: {
@@ -80,14 +81,27 @@ export default {
                 this.getData();
             });
         },
-        // 刷新订阅
-        refresh(row) {
-            this.refreshLoading = true;
-            this.$http.post('/crawl/refresh/' + row._id).then(() => {
-                this.refreshLoading = false;
-                this.$message.success('更新订阅成功');
+        // 抓取直播源
+        crawlSource(row) {
+            this.crawlLoading = true;
+            this.$http.post('/crawl/crawlSource', {
+                id: row._id
+            }).then(() => {
+                this.crawlLoading = false;
+                this.$message.success('直播源抓取成功');
             }).catch(err => {
-                this.refreshLoading = false;
+                this.crawlLoading = false;
+                return this.$message.error(err);
+            });
+        },
+        // 抓取所有
+        crawlSourceAll() {
+            this.crawlLoading = true;
+            this.$http.post('/crawl/crawlSource').then(() => {
+                this.crawlLoading = false;
+                this.$message.success('直播源全量抓取成功');
+            }).catch(err => {
+                this.crawlLoading = false;
                 return this.$message.error(err);
             });
         },
