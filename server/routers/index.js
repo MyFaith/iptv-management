@@ -41,6 +41,51 @@ router.post('/subscribe/refresh/:id', async ctx => {
         ctx.body = Response.error(500, '服务端错误');
     }
 });
+
+/**
+ * 抓取平台直播源
+ */
+router.post('/crawl/crawlSource', async ctx => {
+    try {
+        const id = ctx.request.body.id;
+        const crawlModel = Mongoose.model('crawl');
+        let crawlList = [];
+        if (id) {
+            // 单个
+            const crawl = await crawlModel.findById(id);
+            if (!crawl) {
+                ctx.body = Response.error(404, '该ID不存在');
+            }
+            crawlList.push(crawl);
+        } else {
+            // 全部
+            crawlList = await crawlModel.find();
+        }
+        // 解析
+        const sourceModel = Mongoose.model('source');
+        crawlList.map(async item => {
+            if (item.platform === 1) {
+                const html = await Axios.get(item.url);
+                const m3u8 = html.data.match(/var streamUrl = "(.+)";/);
+                const logo = html.data.match(/\$ROOM\.owner_avatar ="(.+)";/);
+                await sourceModel.updateOne({ name: item.name }, {
+                    name: item.name,
+                    category: item.category,
+                    url: m3u8[1],
+                    logo: logo[1],
+                    type: 3
+                }, { upsert: true });
+            } else if (item.platform === 2) {
+    
+            } else if (item.platform === 3) {
+    
+            }
+        });
+        ctx.body = Response.success('成功', null);
+    } catch (err) {
+        ctx.body = Response.error(500, '服务端错误');
+    }
+});
 /* 自定义路由END */
 
 /* 通用路由START */
