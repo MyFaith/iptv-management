@@ -49,6 +49,19 @@ export default new Router({
             path: '/subscribe/edit/:id',
             component: () => import('./views/subscribe/edit.vue'),
             props: true
+        },
+        {
+            path: '/crawl/list',
+            component: () => import('./views/crawl/list.vue')
+        },
+        {
+            path: '/crawl/add',
+            component: () => import('./views/crawl/edit.vue')
+        },
+        {
+            path: '/crawl/edit/:id',
+            component: () => import('./views/crawl/edit.vue'),
+            props: true
         }
     ]
 });

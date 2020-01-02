@@ -58,11 +58,13 @@ router.get('/:resource', async ctx => {
         Object.keys(ctx.query).map(key => {
             if (key !== 'page' && key !== 'size') {
                 const value = ctx.query[key];
-                const obj = {};
-                obj[key] = {
-                    $regex: new RegExp(value, 'i')
-                };
-                query.$and.push(obj);
+                if (value) {
+                    const obj = {};
+                    obj[key] = {
+                        $regex: new RegExp(value, 'i')
+                    };
+                    query.$and.push(obj);
+                }
             }
         });
     

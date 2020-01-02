@@ -1,12 +1,12 @@
 <template>
-    <div class="subscribe-list">
+    <div class="crawl-list">
         <div class="filters">
             <div class="inputs">
                 <el-input class="name" v-model="filters.name" placeholder="根据名称搜索"></el-input>
-                <el-input class="url" v-model="filters.url" placeholder="根据订阅地址搜索"></el-input>
+                <el-input class="url" v-model="filters.url" placeholder="根据直播间地址搜索"></el-input>
             </div>
             <div class="control-btns">
-                <el-button class="add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/subscribe/add')"></el-button>
+                <el-button class="add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/crawl/add')"></el-button>
                 <el-button class="search" type="primary" size="small" icon="el-icon-search" @click="getData"></el-button>
             </div>
         </div>
@@ -20,7 +20,14 @@
                     <span v-else>-</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="url" label="订阅地址"></el-table-column>
+            <el-table-column label="直播平台">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.platform === 1">斗鱼</span>
+                    <span v-else-if="scope.row.platform === 2">虎牙</span>
+                    <span v-else-if="scope.row.platform === 3">战旗</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="url" label="直播间地址"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button size="small" type="warning" icon="el-icon-refresh" @click="refresh(scope.row)" :loading="refreshLoading"></el-button>
@@ -58,7 +65,7 @@ export default {
         },
         // 编辑
         edit(row) {
-            this.$router.push(`/subscribe/edit/${row._id}`);
+            this.$router.push(`/crawl/edit/${row._id}`);
         },
         // 删除
         remove(row) {
@@ -67,7 +74,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                return this.$http.delete('/subscribe/' + row._id);
+                return this.$http.delete('/crawl/' + row._id);
             }).then(res => {
                 this.$message.success(`已删除 ${res.data.deletedCount} 条数据.`);
                 this.getData();
@@ -76,7 +83,7 @@ export default {
         // 刷新订阅
         refresh(row) {
             this.refreshLoading = true;
-            this.$http.post('/subscribe/refresh/' + row._id).then(() => {
+            this.$http.post('/crawl/refresh/' + row._id).then(() => {
                 this.refreshLoading = false;
                 this.$message.success('更新订阅成功');
             }).catch(err => {
@@ -86,7 +93,7 @@ export default {
         },
         // 获取数据
         getData() {
-            this.$http.get('/subscribe', {
+            this.$http.get('/crawl', {
                 params: {
                     page: this.page,
                     size: 10,
@@ -101,7 +108,7 @@ export default {
         }
     },
     created() {
-        this.setHeaderName('直播源订阅');
+        this.setHeaderName('直播平台抓取');
         this.getData();
     }
 };
@@ -116,7 +123,7 @@ export default {
         margin: 0 10px;
     }
     .inputs {
-        .name, .url {
+        .name, .url, .platform {
             width: 200px;
         }
     }

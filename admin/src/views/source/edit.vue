@@ -1,6 +1,6 @@
 <template>
     <div class="source-edit">
-        <el-form :model="form" label-width="80px" style="width: 30%;">
+        <el-form :model="form" label-width="150px" style="width: 30%;">
             <el-form-item label="名称">
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
@@ -35,7 +35,8 @@ export default {
                 name: '',
                 category: null,
                 url: '',
-                logo: ''
+                logo: '',
+                type: 1
             },
             categoryList: []
         };

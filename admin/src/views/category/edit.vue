@@ -1,6 +1,6 @@
 <template>
     <div class="category-edit">
-        <el-form :model="form" label-width="80px" style="width: 30%;">
+        <el-form :model="form" label-width="150px" style="width: 30%;">
             <el-form-item label="分类名称">
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
