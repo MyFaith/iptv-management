@@ -70,7 +70,7 @@ router.get('/:resource', async ctx => {
         const options = { populate: '' };
         if (resource === 'category') {
             options.populate = 'parent';
-        } else if (resource === 'source' || resource === 'subscribe') {
+        } else if (resource === 'source' || resource === 'subscribe' || resource === 'crawl') {
             options.populate = 'category';
         }
         // 如果没有条件, 清空条件对象
