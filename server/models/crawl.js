@@ -1,4 +1,4 @@
-const Mongoose = require('mongoose');
+import Mongoose from 'mongoose';
 
 const CrawlSchema = new Mongoose.Schema({
     name: String,

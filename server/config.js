@@ -1,3 +1,3 @@
-module.exports = {
-    MONGODB_URL: ''
+export default {
+    MONGODB_URL: 'mongodb://server.myfaith.io/iptv'
 };

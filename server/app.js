@@ -1,10 +1,10 @@
-const Koa = require('koa');
-const BodyParser = require('koa-bodyparser');
-const Cors = require('koa-cors');
-const Mongoose = require('mongoose');
-const Config = require('./config');
-const routers = require('./routers');
-require('./models');
+import Koa from 'koa';
+import BodyParser from 'koa-bodyparser';
+import Cors from 'koa-cors';
+import Mongoose from 'mongoose';
+import Config from './config.js';
+import routers from './routers/index.js';
+import './models/index.js';
 
 // Init mongodb
 Mongoose.connect(Config.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });

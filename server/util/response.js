@@ -1,4 +1,4 @@
-exports.error = function(code, msg) {
+export function error(code, msg) {
     return {
         err: true,
         code,
@@ -6,7 +6,7 @@ exports.error = function(code, msg) {
     };
 };
 
-exports.success = function(msg, data) {
+export function success(msg, data) {
     return {
         err: false,
         code: 200,

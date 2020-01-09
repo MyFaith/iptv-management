@@ -1,8 +1,8 @@
-const Router = require('koa-router');
-const Mongoose = require('mongoose');
-const Axios = require('axios');
-const PlaylistParser = require('iptv-playlist-parser');
-const Response = require('../util/response');
+import Router from'koa-router';
+import Mongoose from'mongoose';
+import Axios from'axios';
+import PlaylistParser from'iptv-playlist-parser';
+import * as Response from'../util/response.js';
 
 const router = new Router();
 
@@ -197,4 +197,4 @@ router.delete('/:resource/:id', async ctx => {
 });
 /* 通用路由END */
 
-module.exports = router;
+export default router;
