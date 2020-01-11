@@ -76,7 +76,16 @@ router.post('/crawl/crawlSource', async ctx => {
                     type: 3
                 }, { upsert: true });
             } else if (item.platform === 2) {
-    
+                const html = await Axios.get(item.url);
+                let streamInfo = html.data.match(/"stream":(.*)\};/)[1];
+                streamInfo = JSON.parse(streamInfo).data[0];
+                await sourceModel.updateOne({ name: item.name }, {
+                    name: item.name,
+                    category: item.category,
+                    url: `${streamInfo.gameStreamInfoList[0].sHlsUrl}${streamInfo.gameStreamInfoList[0].sStreamName}${streamInfo.gameStreamInfoList[0].sHlsUrlSuffix}`,
+                    logo: streamInfo.gameLiveInfo.avatar180,
+                    type: 3
+                }, { upsert: true });
             } else if (item.platform === 3) {
     
             }
