@@ -82,7 +82,7 @@ router.post('/crawl/crawlSource', async ctx => {
                 await sourceModel.updateOne({ name: item.name }, {
                     name: item.name,
                     category: item.category,
-                    url: `${streamInfo.gameStreamInfoList[0].sHlsUrl}${streamInfo.gameStreamInfoList[0].sStreamName}${streamInfo.gameStreamInfoList[0].sHlsUrlSuffix}`,
+                    url: `${streamInfo.gameStreamInfoList[0].sHlsUrl}/${streamInfo.gameStreamInfoList[0].sStreamName}.${streamInfo.gameStreamInfoList[0].sHlsUrlSuffix}`.trim(),
                     logo: streamInfo.gameLiveInfo.avatar180,
                     type: 3
                 }, { upsert: true });
