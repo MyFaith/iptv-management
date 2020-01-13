@@ -87,7 +87,7 @@ router.post('/crawl/crawlSource', async ctx => {
                     type: 3
                 }, { upsert: true });
             } else if (item.platform === 3) {
-    
+                ctx.body = Response.error(500, '正在对接中');
             }
         });
         ctx.body = Response.success('成功', null);
