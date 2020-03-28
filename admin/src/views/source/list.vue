@@ -16,6 +16,7 @@
                 <el-input class="name" size="small" v-model="filters.name" placeholder="根据名称搜索"></el-input>
                 <el-input class="url" size="small" v-model="filters.url" placeholder="根据URL搜索"></el-input>
                 <el-select v-model="filters.category" size="small" placeholder="请选择分类">
+                    <el-option label="全部" value=""></el-option>
                     <el-option v-for="item in categoryList" :key="item._id" :label="item.name" :value="item._id"></el-option>
                 </el-select>
                 <el-button class="search" type="primary" size="small" icon="el-icon-search" @click="getData"></el-button>
