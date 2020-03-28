@@ -6,35 +6,40 @@ import * as Response from'../util/response.js';
 
 const router = new Router();
 
-/* 自定义路由START */
+/* ---------------------------------------------自定义路由START--------------------------------------------- */
 /**
- * 更新订阅源
+ * 导入直播源
  */
-router.post('/subscribe/refresh/:id', async ctx => {
+router.post('/importSource', async ctx => {
     try {
-        const id = ctx.params.id;
-        const subscribeModel = Mongoose.model('subscribe');
-        const source = await subscribeModel.findById(id);
-        if (!source) {
-            ctx.body = Response.error(404, '该ID不存在');
-        }
-        // 获取列表数据
-        const res = await Axios.get(source.url);
-        // 解析数据
-        const playlist = PlaylistParser.parse(res.data);
-        // 保存到数据库
+        const params = ctx.request.body;
+        const sourceModel = Mongoose.model('source');
+        
+        let content = '';
         const dataList = [];
+        if (params.importType === 1) {
+            // 从URL导入
+            const res = await Axios.get(params.url);
+            content = res.data;
+        } else if (params.importType === 2) {
+            // 从M3U文件导入
+            content = params.m3uContent;
+        } else {
+            ctx.body = Response.error(500, '导入类型错误');
+        }
+        // 解析数据
+        const playlist = PlaylistParser.parse(content);
+        // 循环存储到source表
         playlist.items.map(item => {
             dataList.push({
                 name: item.name,
-                category: source.category._id.toString(),
+                category: params.category,
                 url: item.url,
                 logo: item.tvg.logo,
-                type: 2 // 订阅源
+                groupTitme: item.group.title,
+                type: 2 // 导入直播源
             });
         });
-        const sourceModel = Mongoose.model('source');
-        await sourceModel.deleteMany({ type: 2 });
         const result = await sourceModel.insertMany(dataList);
         ctx.body = Response.success('成功', result);
     } catch (err) {
@@ -95,9 +100,9 @@ router.post('/crawl/crawlSource', async ctx => {
         ctx.body = Response.error(500, '服务端错误');
     }
 });
-/* 自定义路由END */
+/* ---------------------------------------------自定义路由END--------------------------------------------- */
 
-/* 通用路由START */
+/* ---------------------------------------------通用路由START--------------------------------------------- */
 /**
  * 获取列表
  */
@@ -204,6 +209,6 @@ router.delete('/:resource/:id', async ctx => {
         ctx.body = Response.error(500, '服务端错误');
     }
 });
-/* 通用路由END */
+/* ---------------------------------------------通用路由END--------------------------------------------- */
 
 export default router;

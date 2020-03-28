@@ -9,7 +9,7 @@ export default new Router({
     routes: [
         {
             path: '/',
-            component: () => import('./views/home.vue')
+            redirect: '/category/list'
         },
         {
             path: '/category/list',
@@ -38,17 +38,8 @@ export default new Router({
             props: true
         },
         {
-            path: '/subscribe/list',
-            component: () => import('./views/subscribe/list.vue')
-        },
-        {
-            path: '/subscribe/add',
-            component: () => import('./views/subscribe/edit.vue')
-        },
-        {
-            path: '/subscribe/edit/:id',
-            component: () => import('./views/subscribe/edit.vue'),
-            props: true
+            path: '/importSource',
+            component: () => import('./views/import/index.vue')
         },
         {
             path: '/crawl/list',

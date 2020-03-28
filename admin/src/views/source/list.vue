@@ -8,6 +8,7 @@
             <div class="control-btns">
                 <el-button class="add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/source/add')"></el-button>
                 <el-button class="search" type="primary" size="small" icon="el-icon-search" @click="getData"></el-button>
+                <el-button class="migrate" type="warning" size="small" icon="el-icon-guide"></el-button>
             </div>
         </div>
         <el-table :data="tableData" tooltip-effect="dark" stripe style="width: 100%;">
@@ -19,6 +20,7 @@
                     <el-image style="width: 150px; height: 80px" :src="scope.row.logo" fit="cover"></el-image>
                 </template>
             </el-table-column>
+            <el-table-column prop="groupTitle" label="原始分类"></el-table-column>
             <el-table-column label="所属分类">
                 <template slot-scope="scope">
                     <router-link v-if="scope.row.category" tag="el-link" type="primary" :to="`/category/edit/${scope.row.category._id}`">{{ scope.row.category.name }}</router-link>

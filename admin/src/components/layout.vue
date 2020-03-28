@@ -43,7 +43,7 @@ export default {
                     icon: 'el-icon-video-camera-solid',
                     items: [
                         { title: '直播源列表', path: '/source/list' },
-                        { title: '直播源订阅', path: '/subscribe/list' },
+                        { title: '直播源导入', path: '/importSource' },
                         { title: '直播平台抓取', path: '/crawl/list' }
                     ]
                 }
