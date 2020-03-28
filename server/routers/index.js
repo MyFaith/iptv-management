@@ -93,6 +93,7 @@ router.post('/crawl/crawlSource', async ctx => {
                     category: item.category,
                     url: m3u8[1],
                     logo: logo[1],
+                    groupTitle: '斗鱼',
                     type: 3
                 }, { upsert: true });
             } else if (item.platform === 2) {
@@ -104,6 +105,7 @@ router.post('/crawl/crawlSource', async ctx => {
                     category: item.category,
                     url: `${streamInfo.gameStreamInfoList[0].sHlsUrl}/${streamInfo.gameStreamInfoList[0].sStreamName}.${streamInfo.gameStreamInfoList[0].sHlsUrlSuffix}`.trim(),
                     logo: streamInfo.gameLiveInfo.avatar180,
+                    groupTitle: '虎牙',
                     type: 3
                 }, { upsert: true });
             } else if (item.platform === 3) {
@@ -133,11 +135,18 @@ router.get('/:resource', async ctx => {
             if (key !== 'page' && key !== 'size') {
                 const value = ctx.query[key];
                 if (value) {
-                    const obj = {};
-                    obj[key] = {
-                        $regex: new RegExp(value, 'i')
-                    };
-                    query.$and.push(obj);
+                    if (key === 'category') {
+                        const obj = {
+                            category: value
+                        };
+                        query.$and.push(obj);
+                    } else {
+                        const obj = {};
+                        obj[key] = {
+                            $regex: new RegExp(value, 'i')
+                        };
+                        query.$and.push(obj);
+                    }
                 }
             }
         });

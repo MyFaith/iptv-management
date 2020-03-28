@@ -15,6 +15,9 @@
             <div class="search-box">
                 <el-input class="name" size="small" v-model="filters.name" placeholder="根据名称搜索"></el-input>
                 <el-input class="url" size="small" v-model="filters.url" placeholder="根据URL搜索"></el-input>
+                <el-select v-model="filters.category" size="small" placeholder="请选择分类">
+                    <el-option v-for="item in categoryList" :key="item._id" :label="item.name" :value="item._id"></el-option>
+                </el-select>
                 <el-button class="search" type="primary" size="small" icon="el-icon-search" @click="getData"></el-button>
             </div>
             <div class="control-btns">
@@ -33,7 +36,7 @@
                     <span v-else>暂无</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="groupTitle" label="原始分类"></el-table-column>
+            <el-table-column prop="groupTitle" label="建议分类"></el-table-column>
             <el-table-column label="所属分类">
                 <template slot-scope="scope">
                     <router-link v-if="scope.row.category" tag="el-link" type="primary" :to="`/category/edit/${scope.row.category._id}`">{{ scope.row.category.name }}</router-link>
@@ -62,7 +65,8 @@ export default {
             categoryList: [],
             filters: {
                 name: '',
-                url: ''
+                url: '',
+                category: ''
             },
             isShowMigrate: false,
             migrateId: '',

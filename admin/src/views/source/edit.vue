@@ -15,7 +15,7 @@
             <el-form-item label="LOGO">
                 <el-input v-model="form.logo"></el-input>
             </el-form-item>
-            <el-form-item label="原始分类">
+            <el-form-item label="建议分类">
                 <el-input v-model="form.groupTitle"></el-input>
             </el-form-item>
             <el-form-item>
