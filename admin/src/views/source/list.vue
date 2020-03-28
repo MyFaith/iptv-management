@@ -1,23 +1,36 @@
 <template>
     <div class="source-list">
+        <!-- 分类移动对话框 -->
+        <el-dialog title="分类移动" :visible.sync="isShowMigrate" width="10%" @close="isShowMigrate=false">
+            <el-select v-model="migrateId" placeholder="请选择分类">
+                <el-option v-for="item in categoryList" :key="item._id" :label="item.name" :value="item._id"></el-option>
+            </el-select>
+            <span slot="footer">
+                <el-button @click="isShowMigrate=false">取消</el-button>
+                <el-button type="primary" @click="migrateBatch">确定</el-button>
+            </span>
+        </el-dialog>
+        
         <div class="filters">
-            <div class="inputs">
-                <el-input class="name" v-model="filters.name" placeholder="根据名称搜索"></el-input>
-                <el-input class="url" v-model="filters.url" placeholder="根据URL搜索"></el-input>
+            <div class="search-box">
+                <el-input class="name" size="small" v-model="filters.name" placeholder="根据名称搜索"></el-input>
+                <el-input class="url" size="small" v-model="filters.url" placeholder="根据URL搜索"></el-input>
+                <el-button class="search" type="primary" size="small" icon="el-icon-search" @click="getData"></el-button>
             </div>
             <div class="control-btns">
                 <el-button class="add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/source/add')"></el-button>
-                <el-button class="search" type="primary" size="small" icon="el-icon-search" @click="getData"></el-button>
-                <el-button class="migrate" type="warning" size="small" icon="el-icon-guide"></el-button>
+                <el-button size="small" type="danger" icon="el-icon-delete" @click="removeBatch"></el-button>
+                <el-button class="migrate" type="warning" size="small" icon="el-icon-guide" @click="isShowMigrate=true"></el-button>
             </div>
         </div>
-        <el-table :data="tableData" tooltip-effect="dark" stripe style="width: 100%;">
+        <el-table ref="table" :data="tableData" tooltip-effect="dark" stripe style="width: 100%;">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="_id" label="ID"></el-table-column>
             <el-table-column prop="name" label="名称"></el-table-column>
             <el-table-column label="LOGO">
                 <template slot-scope="scope">
-                    <el-image style="width: 150px; height: 80px" :src="scope.row.logo" fit="cover"></el-image>
+                    <el-image v-if="scope.row.logo" :src="scope.row.logo" fit="cover" style="width: 150px; height: 80px"></el-image>
+                    <span v-else>暂无</span>
                 </template>
             </el-table-column>
             <el-table-column prop="groupTitle" label="原始分类"></el-table-column>
@@ -46,10 +59,13 @@ export default {
     data() {
         return {
             tableData: [],
+            categoryList: [],
             filters: {
                 name: '',
                 url: ''
             },
+            isShowMigrate: false,
+            migrateId: '',
             page: 1,
             total: 0
         };
@@ -78,6 +94,44 @@ export default {
                 this.getData();
             });
         },
+        // 批量删除
+        removeBatch() {
+            const selected = this.$refs.table.selection;
+            const ids = selected.reduce((arr, item) => {
+                arr.push(item._id);
+                return arr;
+            }, []);
+            this.$confirm('是否确定删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                return this.$http.delete('/source/' + ids.join(','));
+            }).then(res => {
+                this.$message.success(`已删除 ${res.data.deletedCount} 条数据.`);
+                this.getData();
+            });
+        },
+        // 批量分类移动
+        migrateBatch() {
+            const selected = this.$refs.table.selection;
+            const ids = selected.reduce((arr, item) => {
+                arr.push(item._id);
+                return arr;
+            }, []);
+
+            this.$http.post('/migrateCategory', {
+                ids,
+                to: this.migrateId
+            }).then(() => {
+                this.$message.success('移动成功');
+                this.isShowMigrate = false;
+                this.getData();
+            }).catch(err => {
+                return this.$message.error(err);
+            });
+            
+        },
         // 获取数据
         getData() {
             this.$http.get('/source', {
@@ -92,11 +146,20 @@ export default {
             }).catch(err => {
                 return this.$message.error(err);
             });
+        },
+        // 获取分类列表
+        getCategory() {
+            this.$http.get('/category').then(res => {
+                this.categoryList = res.data.list;
+            }).catch(err => {
+                return this.$message.error(err);
+            });
         }
     },
     created() {
         this.setHeaderName('直播源管理');
         this.getData();
+        this.getCategory();
     }
 };
 </script>
@@ -109,7 +172,7 @@ export default {
     * {
         margin: 0 10px;
     }
-    .inputs {
+    .search-box {
         .name, .url {
             width: 200px;
         }

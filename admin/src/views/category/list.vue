@@ -1,12 +1,12 @@
 <template>
     <div class="category-list">
         <div class="filters">
-            <div class="inputs">
-                <el-input class="name" v-model="filters.name" placeholder="根据名称搜索"></el-input>
+            <div class="search-box">
+                <el-input class="name" size="small" v-model="filters.name" placeholder="根据名称搜索"></el-input>
+                <el-button class="search" type="primary" size="small" icon="el-icon-search" @click="getData"></el-button>
             </div>
             <div class="control-btns">
                 <el-button class="add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/category/add')"></el-button>
-                <el-button class="search" type="primary" size="small" icon="el-icon-search" @click="getData"></el-button>
             </div>
         </div>
         <el-table :data="tableData" tooltip-effect="dark" stripe style="width: 100%;">
@@ -99,7 +99,7 @@ export default {
     * {
         margin: 0 10px;
     }
-    .inputs {
+    .search-box {
         .name {
             width: 200px;
         }

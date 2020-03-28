@@ -8,6 +8,21 @@ const router = new Router();
 
 /* ---------------------------------------------自定义路由START--------------------------------------------- */
 /**
+ * 直播源批量移动分类
+ */
+router.post('/migrateCategory', async ctx => {
+    try {
+        const params = ctx.request.body;
+        const sourceModel = Mongoose.model('source');
+        
+        const result = await sourceModel.updateMany({ _id: { $in: params.ids } }, { category: params.to });
+        ctx.body = Response.success('成功', result);
+    } catch (err) {
+        ctx.body = Response.error(500, '服务端错误');
+    }
+});
+
+/**
  * 导入直播源
  */
 router.post('/importSource', async ctx => {
@@ -36,7 +51,7 @@ router.post('/importSource', async ctx => {
                 category: params.category,
                 url: item.url,
                 logo: item.tvg.logo,
-                groupTitme: item.group.title,
+                groupTitle: item.group.title,
                 type: 2 // 导入直播源
             });
         });
@@ -202,8 +217,14 @@ router.delete('/:resource/:id', async ctx => {
         const resource = ctx.params.resource;
         const id = ctx.params.id;
     
+        let result = '', ids = [];
         const model = Mongoose.model(resource);
-        const result = await model.deleteOne({ _id: id });
+        if (id.includes(',')) {
+            ids = id.split(',');
+            result = await model.deleteMany({ _id: { $in: ids } });
+        } else {
+            result = await model.deleteOne({ _id: id });
+        }
         ctx.body = Response.success('成功', result);
     } catch (err) {
         ctx.body = Response.error(500, '服务端错误');
