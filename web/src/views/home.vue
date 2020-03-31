@@ -1,9 +1,17 @@
 <template>
-    <div>Home</div>
+    <div class="home">
+        <!-- <Player/> -->
+        <PlayList/>
+    </div>
 </template>
 
 <script>
-export default {};
+import Player from '../components/player';
+import PlayList from '../components/playlist';
+
+export default {
+    components: { Player, PlayList }
+};
 </script>
 
 <style></style>
