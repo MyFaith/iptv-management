@@ -5,11 +5,4 @@ const CategorySchema = new Mongoose.Schema({
     parent: { type: Mongoose.SchemaTypes.ObjectId, ref: 'category' }
 });
 
-CategorySchema.virtual('children', {
-    localField: '_id',
-    foreignField: 'parent',
-    justOne: false,
-    ref: 'category'
-});
-
 Mongoose.model('category', CategorySchema, 'category');

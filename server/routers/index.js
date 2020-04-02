@@ -161,7 +161,12 @@ router.get('/:resource', async ctx => {
         // 如果没有条件, 清空条件对象
         if (query.$and.length === 0) query = {};
         const total = await await model.find(query).setOptions(options).count();
-        const result = await model.find(query).setOptions(options).skip((Number(page) - 1) * Number(size)).limit(Number(size));
+        let result = [];
+        if (page !== 0 && size !== 0) {
+            result = await model.find(query).setOptions(options).skip((Number(page) - 1) * Number(size)).limit(Number(size));
+        } else {
+            result = await model.find(query).setOptions(options);
+        }
         ctx.body = Response.success('成功', {
             total,
             list: result
