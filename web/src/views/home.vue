@@ -27,11 +27,14 @@ export default {
 <style lang="scss" scoped>
 .home {
     display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
     .player {
         flex: 3;
     }
     .playlist {
-        flex: 1;
+        overflow-y: scroll;
     }
 }
 </style>

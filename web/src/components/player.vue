@@ -1,12 +1,12 @@
 <template>
     <div class="player-wrapper">
-        <DPlayer :options="playerOptions"/>
+        <DPlayer ref="player" :options="playerOptions"/>
     </div>
 </template>
 
 <script>
 window.Hls = require('hls.js');
-window.flvjs = require('flv.js');
+window.flvjs = require('flv.js').default;
 import DPlayer from 'vue-dplayer';
 import 'vue-dplayer/dist/vue-dplayer.min.css'
 
@@ -17,7 +17,22 @@ export default {
     },
     watch: {
         data(newVal) {
-            this.playerOptions.video.url = newVal.url;
+            // 获取播放器实例
+            const player = this.$refs.player.dp;
+            // 新直播流参数
+            const options = {
+                url: newVal.url,
+                customType: ''
+            };
+            // 判断hls和flv
+            if (newVal.url.includes('m3u8')) {
+                options.customType = 'hls';
+            } else if (newVal.url.includes('flv')) {
+                options.customType = 'flv';
+            }
+            // 切换直播并播放
+            player.switchVideo(options);
+            player.play();
         }
     },
     data() {
@@ -28,8 +43,8 @@ export default {
                 autoplay: false,
                 volume: 0.5,
                 video: {
-                    url: 'https://live-wcloud-cdn.ysp.cctv.cn/tlivecloud-cdn.ysp.cctv.cn/001/2000210102.m3u8',
-                    type: 'hls'
+                    url: '',
+                    type: ''
                 }
             }
         }
@@ -38,4 +53,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .dplayer {
+    height: 100%;
+    width: 100%;
+}
 </style>

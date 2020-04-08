@@ -16,4 +16,7 @@ body {
 * {
     box-sizing: border-box;
 }
+*::-webkit-scrollbar {
+    display: none;
+}
 </style>
