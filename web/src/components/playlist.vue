@@ -66,8 +66,7 @@ export default {
 
 <style lang="scss" scoped>
 .playlist {
-    margin: 80px auto;
-    width: 20%;
+    padding: 20px;
     .ant-list-item {
         padding: 12px;
     }

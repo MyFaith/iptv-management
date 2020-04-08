@@ -12,6 +12,14 @@ import 'vue-dplayer/dist/vue-dplayer.min.css'
 
 export default {
     components: { DPlayer },
+    props: {
+        data: Object
+    },
+    watch: {
+        data(newVal) {
+            this.playerOptions.video.url = newVal.url;
+        }
+    },
     data() {
         return {
             playerOptions: {
@@ -30,10 +38,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.player-wrapper {
-    .dplayer {
-        height: 100px;
-        width: 100px;
-    }
-}
 </style>
