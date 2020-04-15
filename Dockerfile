@@ -1,17 +1,20 @@
-FROM node
+FROM alpine
 
-COPY ./web/dist /app/web
-COPY ./admin/dist /app/admin
-COPY ./server /app/server
-COPY ./nginx.conf /app
+COPY ./ /source
+WORKDIR /source
+
+RUN apk update && \
+    apk add nodejs npm nginx && \
+    mkdir -p /run/nginx && mkdir -p /app && \
+    cd /source/web && npm run build && \
+    cd /source/admin && npm run build && \
+    cp -r /source/web/* /app && cp -r /source/admin /app && \
+    cp -r /source/server /app && cp -f /source/nginx.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /app
 
-RUN apt update && apt install -y nginx && \
-    cp nginx.conf /etc/nginx/conf.d/default.conf && \
-    yarn global add pm2
-
+VOLUME /source
+VOLUME /app
 EXPOSE 80
 
-ENTRYPOINT /etc/init.d/nginx restart && \
-    pm2 start server/app.js -i 4 && top
+ENTRYPOINT nginx -s reload && node --experimental-modules server/app.js
