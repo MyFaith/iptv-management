@@ -17,4 +17,4 @@ VOLUME /source
 VOLUME /app
 EXPOSE 80
 
-ENTRYPOINT nginx -s reload && node --experimental-modules server/app.js
+ENTRYPOINT nginx && node --experimental-modules server/app.js
