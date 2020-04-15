@@ -8,7 +8,7 @@ RUN apk update && \
     mkdir -p /run/nginx && mkdir -p /app && \
     cd /source/web && npm run build && \
     cd /source/admin && npm run build && \
-    cp -r /source/web/* /app && cp -r /source/admin /app && \
+    cp -r /source/web/dist/* /app && cp -r /source/admin/dist /app && \
     cp -r /source/server /app && cp -f /source/nginx.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /app
