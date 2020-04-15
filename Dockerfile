@@ -6,8 +6,8 @@ WORKDIR /source
 RUN apk update && \
     apk add nodejs npm nginx && \
     mkdir -p /run/nginx && mkdir -p /app && \
-    cd /source/web && npm run build && \
-    cd /source/admin && npm run build && \
+    cd /source/web && npm install && npm run build && \
+    cd /source/admin && npm install && npm run build && \
     cp -r /source/web/dist/* /app && cp -r /source/admin/dist /app/admin && \
     cp -r /source/server /app && cp -f /source/nginx.conf /etc/nginx/conf.d/default.conf
 
