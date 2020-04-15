@@ -1,5 +1,5 @@
 module.exports = {
-    publicPath: '/admin/',
+    publicPath: process.env.BASE_URL,
     devServer: {
         proxy: {
             '/api': {
