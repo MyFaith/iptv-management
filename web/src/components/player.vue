@@ -1,6 +1,7 @@
 <template>
     <div class="player-wrapper">
         <DPlayer ref="player" :options="playerOptions"/>
+        <a-icon class="menu" type="menu" @click="openPlaylist" />
     </div>
 </template>
 
@@ -48,6 +49,11 @@ export default {
                 }
             }
         }
+    },
+    methods: {
+        openPlaylist() {
+            this.$emit('openPlaylist');
+        }
     }
 };
 </script>
@@ -56,5 +62,17 @@ export default {
 ::v-deep .dplayer {
     height: 100%;
     width: 100%;
+}
+.menu {
+    display: none;
+}
+@media (max-width: 768px) {
+    .menu {
+        display: block;
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        color: #fff;
+    }
 }
 </style>

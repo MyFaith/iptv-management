@@ -1,7 +1,7 @@
 <template>
     <div class="playlist">
         <a-form layout="horizontal">
-            <a-form-item label="搜索" :labelCol="{ span: 3 }" :wrapperCol="{ span: 20 }">
+            <a-form-item label="搜索" :labelCol="{ span: 4 }" :wrapperCol="{ span: 20 }">
                 <a-input-search v-model="searchText" @search="search" enterButton></a-input-search>
             </a-form-item>
         </a-form>
@@ -14,6 +14,7 @@
               </a-list>
           </a-collapse-panel>
         </a-collapse>
+        <a-icon class="close" type="close" @click="closePlaylist"></a-icon>
     </div>
 </template>
 
@@ -44,6 +45,9 @@ export default {
                 if (Object.keys(_this.originalSource).length > 0) _this.source = _this.originalSource;
             }
         },
+        closePlaylist() {
+            this.$emit('closePlaylist');
+        },
         getData() {
             const params = { page: 0, size: 0 }
             this.$http.get('/source', { params }).then(res => {
@@ -66,9 +70,13 @@ export default {
 
 <style lang="scss" scoped>
 .playlist {
-    padding: 20px;
+    padding: 40px 20px;
+    background: #000;
     .ant-list-item {
         padding: 12px;
+    }
+    ::v-deep .ant-form-item-label label {
+        color: #fff;
     }
     .source-item {
         cursor: pointer;
@@ -83,6 +91,20 @@ export default {
                     padding: 0;
                 }
             }
+        }
+    }
+    .close {
+        display: none;
+    }
+}
+@media (max-width: 768px) {
+    .playlist {
+        .close {
+            display: block;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            color: #fff;
         }
     }
 }
